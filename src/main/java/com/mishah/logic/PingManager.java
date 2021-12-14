@@ -1,18 +1,20 @@
 package com.mishah.logic;
 
+import com.mishah.model.Ping;
 import com.mishah.model.PingAnalyticRequest;
 import com.mishah.model.PingAnalyticResponse;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PingManager {
 
     private int packets = 10;
 
-    public PingManager() throws Exception {
-    }
+    public PingManager() {}
 
     public PingManager(int packets) throws Exception {
         if (packets > 0) {
@@ -20,7 +22,7 @@ public class PingManager {
         }
     }
 
-    public PingAnalyticResponse pingURL(PingAnalyticRequest pingAnalyticRequest) throws Exception {
+    public Ping pingURL(PingAnalyticRequest pingAnalyticRequest) throws Exception {
 
         if (pingAnalyticRequest == null)
             throw new NullPointerException("ERROR: ping request found NULL.");
@@ -31,12 +33,16 @@ public class PingManager {
         }
     }
 
-    private PingAnalyticResponse processRequest(String url) throws Exception {
+    public List<Ping> getPings() throws Exception {
+        return  new ArrayList<>();
+    }
+
+    private Ping processRequest(String url) throws Exception {
 
         String pingOn = "ping -c " + packets + " " + url;
 
-        PingAnalyticResponse pingAnalyticResponse = new PingAnalyticResponse();
-        pingAnalyticResponse.setUrl(url);
+        Ping ping = new Ping();
+        ping.setUrl(url);
 
         Process process = Runtime.getRuntime().exec(pingOn);
 
@@ -65,12 +71,12 @@ public class PingManager {
             // String[] units = data[0].trim().split("/");
             String[] values = data[1].replaceAll("ms", "").trim().split("/");
 
-            pingAnalyticResponse.setMin(Float.parseFloat(values[0].trim()));
-            pingAnalyticResponse.setAvg(Float.parseFloat(values[1].trim()));
-            pingAnalyticResponse.setMax(Float.parseFloat(values[2].trim()));
-            pingAnalyticResponse.setStddev(Float.parseFloat(values[3].trim()));
+            ping.setMin(Float.parseFloat(values[0].trim()));
+            ping.setAvg(Float.parseFloat(values[1].trim()));
+            ping.setMax(Float.parseFloat(values[2].trim()));
+            ping.setStddev(Float.parseFloat(values[3].trim()));
 
-            return pingAnalyticResponse;
+            return ping;
 
 
         } else if (SystemUtils.IS_OS_MAC_OSX) {
@@ -83,17 +89,16 @@ public class PingManager {
             // String[] units = data[0].trim().split("/");
             String[] values = data[1].replaceAll("ms", "").trim().split("/");
 
-            pingAnalyticResponse.setMin(Float.parseFloat(values[0].trim()));
-            pingAnalyticResponse.setAvg(Float.parseFloat(values[1].trim()));
-            pingAnalyticResponse.setMax(Float.parseFloat(values[2].trim()));
-            pingAnalyticResponse.setStddev(Float.parseFloat(values[3].trim()));
+            ping.setMin(Float.parseFloat(values[0].trim()));
+            ping.setAvg(Float.parseFloat(values[1].trim()));
+            ping.setMax(Float.parseFloat(values[2].trim()));
+            ping.setStddev(Float.parseFloat(values[3].trim()));
 
-            return pingAnalyticResponse;
+            return ping;
 
         } else {
             throw new Exception("Error: Not supported system type.");
         }
-
 
     }
 }

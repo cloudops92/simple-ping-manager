@@ -2,49 +2,52 @@ package com.mishah.model;
 
 public class PingAnalyticResponse {
 
-    private String url;
-    private Float min;
-    private Float max;
-    private Float avg;
-    private Float stddev;
+    private boolean error;
+    private String message;
+    private String sysId;
+    private Ping ping;
 
-    public Float getMin() {
-        return min;
+    public PingAnalyticResponse() {
+        error = false;
     }
 
-    public void setMin(Float min) {
-        this.min = min;
+    public Ping getPing() {
+        return ping;
     }
 
-    public Float getMax() {
-        return max;
+    public void setPing(Ping ping) {
+        this.ping = ping;
     }
 
-    public void setMax(Float max) {
-        this.max = max;
+    public String getSysId() {
+        return sysId;
     }
 
-    public Float getAvg() {
-        return avg;
+    public void setSysId(String sysId) {
+        this.sysId = sysId;
     }
 
-    public void setAvg(Float avg) {
-        this.avg = avg;
+    public boolean isError() {
+        return error;
     }
 
-    public Float getStddev() {
-        return stddev;
+    public void setError(boolean error) {
+        this.error = error;
     }
 
-    public void setStddev(Float stddev) {
-        this.stddev = stddev;
+    public String getMessage() {
+        return message;
     }
 
-    public String getUrl() {
-        return url;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public Ping getPingAnalyticResponse() {
+        return ping;
+    }
+
+    public void setPingAnalyticResponse(Ping ping) {
+        this.ping = ping;
     }
 }

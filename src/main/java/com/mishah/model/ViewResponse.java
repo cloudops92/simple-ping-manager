@@ -1,13 +1,15 @@
 package com.mishah.model;
 
-public class Response {
+import java.util.List;
+
+public class ViewResponse {
 
     private boolean error;
     private String message;
     private String sysId;
-    private PingAnalyticResponse pingAnalyticResponse;
+    private List<Ping> pings;
 
-    public Response(){
+    public ViewResponse(){
         error = false;
     }
 
@@ -35,11 +37,11 @@ public class Response {
         this.message = message;
     }
 
-    public PingAnalyticResponse getPingAnalyticResponse() {
-        return pingAnalyticResponse;
+    public List<Ping> getPings() {
+        return pings;
     }
 
-    public void setPingAnalyticResponse(PingAnalyticResponse pingAnalyticResponse) {
-        this.pingAnalyticResponse = pingAnalyticResponse;
+    public void setPings(List<Ping> pings) {
+        this.pings = pings;
     }
 }

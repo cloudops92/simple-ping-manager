@@ -101,18 +101,20 @@
         <main role="main" class="inner cover">
             <div class="row" id="request-div">
                 <div class="col-12">
-                    &nbsp;
+                    <div class="form-group" id="loader"></div>
                     <form name="url-form" id="url-form" method="post">
                         <div class="form-group">
                             <input type="text" class="form-control" id="url" name="url" required=""
                                    placeholder="www.abc.com or 192.168.1.1">
                         </div>
-                        <div class="form-group float-right">
-                            <button type="reset" id="reset-button" class="btn btn-outline-warning ">Reset</button>
-                            &nbsp;
-                            <button type="submit" class="btn btn-outline-light" id="submit-button">Submit</button>
+                        <div class="form-group float-left">
+                            <a href="view.html" id="view-button" class="btn btn-outline-light" role="button">View</a>
                         </div>
-                        <div class="form-group" id="loader"></div>
+                        <div class="form-group float-right">
+                            <button type="reset" id="reset-button" class="btn btn-outline-warning">Reset</button>
+                            &nbsp;
+                            <button type="submit" class="btn btn-outline-success" id="submit-button">Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>

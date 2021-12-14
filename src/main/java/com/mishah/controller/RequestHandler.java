@@ -1,12 +1,10 @@
 package com.mishah.controller;
 
 import com.mishah.logic.PingManager;
-import com.mishah.model.PingAnalyticRequest;
-import com.mishah.model.PingAnalyticResponse;
-import com.mishah.model.Request;
-import com.mishah.model.Response;
+import com.mishah.model.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -14,6 +12,7 @@ import java.util.UUID;
 public class RequestHandler {
 
     private final static UUID SYSTEM_ID = UUID.randomUUID();
+    private final PingManager pingManager = new PingManager();
 
     @GetMapping("/")
     public String healthCheck() {
@@ -21,9 +20,9 @@ public class RequestHandler {
     }
 
     @PostMapping("/process")
-    public Response handleRequest(@RequestBody Request request) {
+    public PingAnalyticResponse handleRequest(@RequestBody PingAnalyticRequest request) {
 
-        Response response = new Response();
+        PingAnalyticResponse response = new PingAnalyticResponse();
 
         try {
 
@@ -31,26 +30,46 @@ public class RequestHandler {
 
             if (input == null || input.trim().isEmpty())
                 throw new NullPointerException("Error: Input found either NULL or empty.");
-            else{
+            else {
 
-                PingAnalyticRequest pingAnalyticRequest = new PingAnalyticRequest();
-                pingAnalyticRequest.setUrl(input);
+                Ping ping = pingManager.pingURL(request);
 
-                PingManager pingManager = new PingManager();
-                PingAnalyticResponse pingAnalyticResponse = pingManager.pingURL(pingAnalyticRequest);
-
+                response.setPing(ping);
                 response.setSysId(RequestHandler.SYSTEM_ID.toString());
                 response.setMessage("INFO: Request execute successfully.");
                 response.setError(false);
-                response.setPingAnalyticResponse(pingAnalyticResponse);
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setError(true);
             response.setMessage(e.getMessage());
             e.printStackTrace();
         }
 
-        return  response;
+        return response;
+    }
+
+    @PostMapping("/view")
+    public ViewResponse handleViewRequest(@RequestBody ViewRequest request) {
+
+        ViewResponse response = new ViewResponse();
+
+        try {
+
+            List<Ping> pings = pingManager.getPings();
+
+            response.setSysId(RequestHandler.SYSTEM_ID.toString());
+            response.setMessage("INFO: Request execute successfully.");
+            response.setError(false);
+            response.setPings(pings);
+
+
+        } catch (Exception e) {
+            response.setError(true);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return response;
     }
 }

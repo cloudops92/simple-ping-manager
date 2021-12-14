@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is ping-manger home.">
+    <meta name="author" content="mishal">
+
+    <title>SimplePingManager - Home</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="res/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="res/view.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+</head>
+
+<body class="text-center" onload="defaultSet()">
+
+<div class="cover-container w-100 h-100 p-3 mx-auto flex-column">
+
+    <header class="masthead mb-auto">
+        <div class="inner">
+            <h2 class="masthead-brand"><b>Simple Ping Manager :)</b></h2>
+        </div>
+    </header>
+
+    <div>
+        <a href="index.html" id="home-button" class="btn btn-outline-success" role="button">Home</a>
+        <hr/>
+    </div>
+
+    <div>
+        <main role="main" class="inner cover">
+            <div class="row" id="request-div">
+                <div class="col-14">
+
+                    <table id="pingdatatab" class="display" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Avg.</th>
+                            <th>Stddev</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>URL</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Avg.</th>
+                            <th>Stddev</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <footer class="mastfoot mt-auto">
+        <div class="inner">
+            <h5>Git: <a href="https://github.com/mishah92/SimplePingManager" target="_blank">https://github.com/mishah92/SimplePingManager</a></h5>
+        </div>
+    </footer>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="res/popper.js"></script>
+<script src="res/bootstrap.js"></script>
+
+<script type="application/javascript">
+    $(document).ready(function() {
+        $('#pingdatatab').DataTable();
+    });
+</script>
+
+<script type="application/javascript">
+
+
+
+    $(document).ready(function () {
+
+        // click on button submit
+        $("#url-form").submit(function (e) {
+
+            e.preventDefault();
+
+            var formData = {
+                url: $("#url").val()
+            }
+
+            if (document.getElementById("loader").style.display === "none") {
+                document.getElementById("loader").style.display = "block";
+            }
+
+            $.ajax({
+                url: 'rest/process',
+                contentType: "application/json",
+                type: "POST",
+                dataType: 'json',
+                data: JSON.stringify(formData),
+                success: function (result) {
+                    //console.log(result);
+                    document.getElementById("loader").style.display = "none";
+
+                    if (document.getElementById("response-div").style.display === "none") {
+                        document.getElementById("response-div").style.display = "block";
+                    }
+
+
+                    $("#message").val(result['message']);
+                    $("#systemid").val(result['sysId']);
+
+                    if (result['error'] === false) {
+                        $("#min").val(result['pingAnalyticResponse']['min']);
+                        $("#max").val(result['pingAnalyticResponse']['max']);
+                        $("#avg").val(result['pingAnalyticResponse']['avg']);
+                    }
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                    document.getElementById("loader").style.display = "none";
+
+                    if (document.getElementById("response-div").style.display === "none") {
+                        document.getElementById("response-div").style.display = "block";
+                    }
+
+                    $("#message").val('ERROR: Something went wrong!!! Please try again later.');
+                }
+            })
+        });
+
+        $("#reset-button").on('click', function () {
+            document.getElementById("response-div").style.display = "none";
+            document.getElementById("loader").style.display = "none";
+        });
+    });
+
+
+    function defaultSet() {
+        document.getElementById("response-div").style.display = "none";
+        document.getElementById("loader").style.display = "none";
+    }
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+</body>
+</html>
